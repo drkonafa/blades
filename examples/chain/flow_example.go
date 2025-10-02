@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-kratos/blades"
 	"github.com/go-kratos/blades/contrib/gemini"
+	"github.com/go-kratos/blades/flow"
 )
 
 func main() {
@@ -34,33 +35,38 @@ func main() {
 		blades.WithInstructions("Write a short story based on the given outline."),
 	)
 
-	// Create chain executor
-	executor := NewChainExecutor()
+	// Create the chain using flow package
+	chain := flow.NewChain(storyOutline, storyChecker, storyAgent)
 
-	// Add steps to the chain
-	executor.AddStep(
-		"Story Outline Generator",
-		"Generate a very short story outline based on the user's input.",
-		storyOutline,
-	)
-	executor.AddStep(
-		"Quality Checker",
-		"Read the given story outline, and judge the quality. Also, determine if it is a scifi story.",
-		storyChecker,
-	)
-	executor.AddStep(
-		"Story Writer",
-		"Write a short story based on the given outline.",
-		storyAgent,
-	)
+	// Define the steps for visualization
+	steps := []ChainStep{
+		{
+			Name:         "Story Outline Generator",
+			Instructions: "Generate a very short story outline based on the user's input.",
+			Agent:        storyOutline,
+		},
+		{
+			Name:         "Quality Checker",
+			Instructions: "Read the given story outline, and judge the quality. Also, determine if it is a scifi story.",
+			Agent:        storyChecker,
+		},
+		{
+			Name:         "Story Writer",
+			Instructions: "Write a short story based on the given outline.",
+			Agent:        storyAgent,
+		},
+	}
+
+	// Create flow executor
+	executor := NewFlowExecutor(chain, steps)
 
 	// Initial prompt
 	prompt := blades.NewPrompt(
 		blades.UserMessage("A brave knight embarks on a quest to find a hidden treasure."),
 	)
 
-	// Execute the chain with beautiful output
-	_, err := executor.Execute(context.Background(), prompt)
+	// Execute the chain with beautiful visualization
+	_, err := executor.ExecuteWithVisualization(context.Background(), prompt)
 	if err != nil {
 		log.Fatal(err)
 	}
