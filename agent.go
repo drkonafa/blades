@@ -166,3 +166,13 @@ func (a *Agent) handler(req *ModelRequest) Handler {
 		},
 	}
 }
+
+// Name returns the agent's name
+func (a *Agent) Name() string {
+	return a.name
+}
+
+// Instructions returns the agent's instructions
+func (a *Agent) Instructions() string {
+	return a.instructions
+}

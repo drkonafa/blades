@@ -135,3 +135,8 @@ We look forward to any feedback, suggestions, and contributions to jointly promo
 ## 📄 License
 
 Blades is licensed under the MIT License. For more details, please refer to the [LICENSE](LICENSE) file.
+
+
+
+cd /Users/work/blades/examples
+go run chain/complete_example.go
