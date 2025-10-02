@@ -27,7 +27,7 @@ func loadEnvFile(filename string) error {
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
-		
+
 		parts := strings.SplitN(line, "=", 2)
 		if len(parts) == 2 {
 			key := strings.TrimSpace(parts[0])
@@ -35,7 +35,7 @@ func loadEnvFile(filename string) error {
 			os.Setenv(key, value)
 		}
 	}
-	
+
 	return scanner.Err()
 }
 
@@ -45,7 +45,7 @@ func loadConfig() {
 	if err := loadEnvFile(".env"); err != nil {
 		// If .env file doesn't exist, that's okay - use system environment variables
 	}
-	
+
 	// Also try to load from chain directory
 	if err := loadEnvFile("chain/.env"); err != nil {
 		// If chain/.env file doesn't exist, that's okay - use system environment variables
@@ -55,11 +55,11 @@ func loadConfig() {
 func main() {
 	// Load configuration from .env file or environment variables
 	loadConfig()
-	
+
 	// Create providers
 	geminiProvider := gemini.NewChatProvider()
 	zeusProvider := zeus.NewChatProvider()
-	
+
 	// Create agents with different providers
 	// Step 1: Generate story outline using Gemini
 	storyOutline := blades.NewAgent(
@@ -68,7 +68,7 @@ func main() {
 		blades.WithProvider(geminiProvider),
 		blades.WithInstructions("Generate a very short story outline based on the user's input. Keep it concise and clear."),
 	)
-	
+
 	// Step 2: Enhance the outline using Zeus
 	storyEnhancer := blades.NewAgent(
 		"story_enhancer_agent",
@@ -76,7 +76,7 @@ func main() {
 		blades.WithProvider(zeusProvider),
 		blades.WithInstructions("Take the story outline provided and enhance it with more details, character development, and plot points. Make it more engaging and detailed."),
 	)
-	
+
 	// Step 3: Write the story using Gemini
 	storyWriter := blades.NewAgent(
 		"story_writer_agent",
@@ -84,21 +84,21 @@ func main() {
 		blades.WithProvider(geminiProvider),
 		blades.WithInstructions("Write a short story based on the enhanced story outline provided. Create an engaging narrative that follows the outline structure."),
 	)
-	
+
 	// Create the chain - it will automatically show beautiful visualization!
 	chain := flow.NewChain(storyOutline, storyEnhancer, storyWriter)
-	
+
 	// Initial prompt
 	prompt := blades.NewPrompt(
 		blades.UserMessage("A brave knight embarks on a quest to find a hidden treasure."),
 	)
-	
+
 	// Run the chain - all visualization happens automatically!
 	result, err := chain.Run(context.Background(), prompt)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	// The result is already printed by the chain, but you can access it if needed
 	_ = result.Text()
 }
