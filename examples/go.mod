@@ -6,12 +6,14 @@ replace (
 	github.com/go-kratos/blades => ../
 	github.com/go-kratos/blades/contrib/gemini => ../contrib/gemini
 	github.com/go-kratos/blades/contrib/openai => ../contrib/openai
+	github.com/go-kratos/blades/contrib/zeus => ../contrib/zeus
 )
 
 require (
 	github.com/go-kratos/blades v0.0.0
 	github.com/go-kratos/blades/contrib/gemini v0.0.0-00010101000000-000000000000
 	github.com/go-kratos/blades/contrib/openai v0.0.0-00010101000000-000000000000
+	github.com/go-kratos/blades/contrib/zeus v0.0.0-00010101000000-000000000000
 	github.com/google/jsonschema-go v0.3.0
 )
 
